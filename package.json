@@ -1,0 +1,16 @@
+{
+  "name": "crawfissoftware.randomprovider",
+  "version": "1.0.0",
+  "displayName": "Random Provider",
+  "description": "Component to keep track of good random seeds and use them",
+  "unity": "2019.1",
+  "documentationUrl": "https://github.com/crawfis/RandomProvider.git",
+ "keywords": [
+    "Random"
+  ],
+  "author": {
+    "name": "CrawfisSoftware",
+    "email": "roger.crawfis@gmail.com",
+    "url": "https://github.com/crawfis/RandomProvider.git"
+  }
+}
