@@ -6,6 +6,6 @@ namespace CrawfisSoftware
 {
     public class ScriptableListGeneric<T> : ScriptableObject
     {
-        [SerializeField] public List<T> List;
+        [SerializeField] public List<T> List = new();
     }
 }

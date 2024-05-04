@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 
 using UnityEditor;
 using UnityEditor.UIElements;
@@ -21,14 +20,15 @@ namespace CrawfisSoftware
         SerializedProperty _currentSeedProperty;
         IntegerField _currentSeedField;
         VisualElement _explicitSeedPanel;
-        IntListScriptable _fixedSeedList;
+        //IntListScriptable _fixedSeedList;
         DropdownField _fixedSeedDropDown;
         ObjectField _fixedSeedListField;
 
         public override VisualElement CreateInspectorGUI()
         {
             _randomProvider = this.target as RandomProviderFromList;
-            _fixedSeedList = _randomProvider._fixedSeedList;
+            //_fixedSeedList = _randomProvider._fixedSeedList;
+            if (_randomProvider._fixedSeedList == null) _randomProvider._fixedSeedList = ScriptableObject.CreateInstance<IntListScriptable>();
             _root = new VisualElement();
             //_uiDocument.CloneTree(root);
             var titleLabel = new Label("Master Random Generator Control");
@@ -36,6 +36,10 @@ namespace CrawfisSoftware
 
             _fixedSeedListField = new ObjectField("Fixed Seed List");
             _fixedSeedListField.bindingPath = "_fixedSeedList";
+            _root.RegisterCallback<ChangeEvent<IntListScriptable>>((evt) =>
+            {
+                SetupGenerateSeedPanel();
+            });
             _root.Add(_fixedSeedListField);
 
             bool autoGenerate = SetupAutoSeedToggle();
@@ -54,7 +58,8 @@ namespace CrawfisSoftware
 
             _explicitSeedPanel = new VisualElement();
             _root.Add(_explicitSeedPanel);
-            SetupGenerateSeedPanel(_explicitSeedPanel);
+            SetupGenerateSeedPanel();
+            SetupSeedListPanel(_explicitSeedPanel);
             if (autoGenerate) HideExplicitSeedPanel();
             else ShowExplicitSeedPanel();
 
@@ -73,8 +78,9 @@ namespace CrawfisSoftware
             _currentSeedField.SetValueWithoutNotify(_randomProvider._currentSeed);
         }
 
-        private void SetupGenerateSeedPanel(VisualElement rootPanel)
+        private void SetupGenerateSeedPanel()
         {
+            VisualElement rootPanel = _explicitSeedPanel;
             var buttonPanel = new VisualElement();
             buttonPanel.style.flexDirection = FlexDirection.Row;
             _button = new UnityEngine.UIElements.Button();
@@ -90,16 +96,19 @@ namespace CrawfisSoftware
             {
                 //_currentSeedProperty = serializedObject.FindProperty("_currentSeed");
                 int seed = _randomProvider._currentSeed;
-                _fixedSeedList.List.Add(seed);
-                _fixedSeedDropDown.choices = _fixedSeedList.List.Select(seed => seed.ToString()).ToList<string>();
+                _randomProvider._fixedSeedList.List.Add(seed);
+                _fixedSeedDropDown.choices = _randomProvider._fixedSeedList.List.Select(seed => seed.ToString()).ToList<string>();
             };
             addToListButton.text = "Add Current Seed to List";
             buttonPanel.Add(addToListButton);
             rootPanel.Add(buttonPanel);
+        }
 
+        private void SetupSeedListPanel(VisualElement rootPanel)
+        {
             _fixedSeedDropDown = new DropdownField();
-            CreateScriptableListOfRandomSeeds();
-            _fixedSeedDropDown.choices = _fixedSeedList.List.Select(seed => seed.ToString()).ToList<string>();
+            //CreateScriptableListOfRandomSeeds();
+            _fixedSeedDropDown.choices = _randomProvider._fixedSeedList.List.Select(seed => seed.ToString()).ToList<string>();
             _fixedSeedDropDown.label = "Saved seeds";
             _fixedSeedDropDown.tooltip = "You can associate a ScriptableObject that contains a list of saved random seed. See IntListScriptable.cs";
             _fixedSeedDropDown.value = "Select a fixed Seed";
@@ -112,15 +121,15 @@ namespace CrawfisSoftware
             });
         }
 
-        private void CreateScriptableListOfRandomSeeds()
-        {
-            if (_fixedSeedList != null) return;
-            _fixedSeedList = ScriptableObject.CreateInstance<IntListScriptable>();
-            _fixedSeedList.List = new List<int>();
-            // Bug: If the "Scriptables" directory does not exist this will throw an error.
-            string seedListPath = "Assets/Scriptables/fixedSeedsList.asset";
-            AssetDatabase.CreateAsset(_fixedSeedList, seedListPath);
-        }
+        //private void CreateScriptableListOfRandomSeeds()
+        //{
+        //    if (_fixedSeedList != null) return;
+        //    _fixedSeedList = ScriptableObject.CreateInstance<IntListScriptable>();
+        //    _fixedSeedList.List = new List<int>();
+        //    // Bug: If the "Scriptables" directory does not exist this will throw an error.
+        //    string seedListPath = "Assets/Scriptables/fixedSeedsList.asset";
+        //    AssetDatabase.CreateAsset(_fixedSeedList, seedListPath);
+        //}
 
         private bool SetupAutoSeedToggle()
         {
