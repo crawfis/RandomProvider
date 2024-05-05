@@ -47,7 +47,7 @@ namespace CrawfisSoftware
             return new System.Random(RandomGenerator.Next());
         }
 
-        private void Initialize()
+        public void Initialize()
         {
             int newSeed = _currentSeed;
             if (_generateNewSeed)
