@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-namespace CrawfisSoftware
+﻿namespace CrawfisSoftware
 {
     /// <summary>
     /// Master control for consistent random number generation.
@@ -14,7 +12,7 @@ namespace CrawfisSoftware
         /// The System.Random instance that this class encapsulates.
         /// </summary>
         /// <remarks>Do not cache. You need to re-fetch after set-seed is called.</remarks>
-        public System.Random RandomGenerator { get; private set; }
+        public System.Random RandomGenerator { get; private set; } = new System.Random();
 
         protected virtual void Awake()
         {
