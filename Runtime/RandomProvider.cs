@@ -1,4 +1,6 @@
-﻿namespace CrawfisSoftware
+﻿using UnityEngine;
+
+namespace CrawfisSoftware
 {
     /// <summary>
     /// Master control for consistent random number generation.

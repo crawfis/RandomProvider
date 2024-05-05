@@ -2,7 +2,7 @@
     "name": "CrawfisSoftware.Editor",
     "rootNamespace": "CrawfisSoftware",
     "references": [
-        "GUID:f9c799661e113824787257312f816213"
+        "CrawfisSoftware"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
