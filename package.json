@@ -1,5 +1,5 @@
 {
-  "name": "crawfissoftware.randomprovider",
+  "name": "com.crawfissoftware.randomprovider",
   "version": "1.0.4",
   "displayName": "Random Provider",
   "description": "Component to keep track of good random seeds and use them",
